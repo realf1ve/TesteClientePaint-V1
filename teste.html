@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paint em HTML</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #container {
+            display: flex;
+            align-items: center;
+        }
+
+        #canvas {
+            border: 1px solid #000;
+            background-color: #fff;
+        }
+
+        #controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-left: 20px;
+        }
+
+        #text {
+            font-size: 24px;
+            padding: 20px;
+        }
+
+        input[type="color"] {
+            margin: 10px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px 0;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        input[type="range"] {
+            margin: 5px 0;
+        }
+
+        label {
+            font-size: 16px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <canvas id="canvas" width="800" height="600"></canvas>
+        <div id="controls">
+            <input type="color" id="colorPicker" value="#000000">
+            <button id="clearButton">Limpar</button>
+            <input type="range" id="lineWidthSlider" min="1" max="20" value="5">
+            <label for="lineWidthSlider">Espessura da Linha</label>
+        </div>
+    </div>
+    <div id="text">Código Teste Locaweb</div>
+
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        let painting = false;
+
+        const colorPicker = document.getElementById("colorPicker");
+        const clearButton = document.getElementById("clearButton");
+        const lineWidthSlider = document.getElementById("lineWidthSlider");
+
+        canvas.addEventListener("mousedown", () => {
+            painting = true;
+        });
+
+        canvas.addEventListener("mouseup", () => {
+            painting = false;
+            ctx.beginPath();
+        });
+
+        canvas.addEventListener("mousemove", (e) => {
+            if (!painting) return;
+
+            ctx.lineWidth = lineWidthSlider.value;
+            ctx.lineCap = "round";
+            ctx.strokeStyle = colorPicker.value;
+
+            ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+        });
+
+        clearButton.addEventListener("click", () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        });
+    </script>
+</body>
+</html>
